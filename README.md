@@ -1,6 +1,7 @@
 # Network-Anomaly-Detection-Tool
 
 GOAL
+
 The project aims to create a network anomaly detection tool that processes network traffic data, cleans the data, applies pre-processing steps, and trains a machine learning model to classify network traffic and detect threats. The tool was trained through  large datasets and apply techniques such as outlier detection, data encoding, and using machine learning classification models to detect malicious network behaviour.
 
 Project Structure
