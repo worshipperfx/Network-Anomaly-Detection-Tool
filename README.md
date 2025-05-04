@@ -1,83 +1,82 @@
 # Network-Anomaly-Detection-Tool
 
-GOAL
 
-The project aims to create a network anomaly detection tool that processes network traffic data, cleans the data, applies pre-processing steps, and trains a machine learning model to classify network traffic and detect threats. The tool was trained through  large datasets and apply techniques such as outlier detection, data encoding, and using machine learning classification models to detect malicious network behaviour.
+## Goal
 
-Project Structure
+This tool is designed to detect unusual network activity in real-time using machine learning. It flags anomalies such as DDoS attacks, fuzzers, exploits, and botnet traffic. By learning normal network behavior patterns, the tool identifies threats without relying on manual inspection or static rule-based systems.
 
-Data Cleaning
+The project builds an intelligent network anomaly detection system that processes network traffic data, cleans and transforms it, trains a machine learning model, and performs real-time threat detection. It uses Kafka for streaming, PySpark and Pandas for preprocessing, and a RandomForestClassifier to identify and classify threats as they occur.
 
-The tool handles missing values, duplicates, inconsistent formatting, and outliers in the dataset. Categorical data is also encoded using StringIndexer.
+## What the Project Does
 
-Data Preprocessing
+- Ingests labeled network traffic from the UNSW-NB15 dataset
+- Cleans and preprocesses data with outlier detection, duplicate removal, missing value handling, and categorical encoding
+- Trains a machine learning model on the cleaned data
+- Streams test data using Apache Kafka, mimicking real-time network traffic
+- Sends data to a consumer, which makes predictions using the trained model
+- Flags abnormal behavior and potential threats
 
-Visualize the cleaned data and generate basic descriptive statistics. A histogram is also generated to show the distribution of features.
+## Kafka-Based Real-Time Pipeline
 
-Model Training
+The real-time component uses a Kafka pipeline to simulate network traffic and feed it into the ML model:
 
-The tool uses RandomForestClassifier from scikit-learn to classify the network traffic into different attack categories. Before training, categorical values are encoded using one-hot encoding.
+1. **Producer**:
+   - Loads the testing dataset and one-hot encodes it using a pretrained encoder
+   - Streams encoded data to Kafka topics as simulated real-time network traffic
 
-Simulating Network Traffic 
+2. **Kafka Topics & Brokers**:
+   - Kafka brokers store and distribute the data across topics
+   - Ensures fault tolerance and scalability in the streaming process
 
-While this project works on static datasets, integrating tools like TCP replay for real-time network traffic simulation is possible to create a more dynamic testing environment.
+3. **Consumer**:
+   - Listens to Kafka topics, loads the trained model, and predicts whether incoming traffic is normal or anomalous
+   - Outputs classifications like Normal, DoS, Fuzzers, etc.
 
-The full simulation test will be detailed during the deployment phase in the later stages of the project
+## Project Structure
 
-Tools and Libraries
+### Data Cleaning
 
-•	PySpark: Used for handling large datasets and performing data cleaning tasks on a distributed system.
-•	pandas: For data manipulation and analysis.
-•	matplotlib and seaborn: For data visualization.
-•	scikit-learn: Machine learning algorithms, including RandomForestClassifier for classification tasks.
-•	Python: General-purpose programming language used for all tasks.
+- Removes missing values, duplicates, and outliers using PySpark
+- Encodes categorical features using StringIndexer
 
-Installation
+### Data Preprocessing
 
-To get started with this project, you need to have Python installed. You can install the required libraries using pip:
+- Converts Spark DataFrame to Pandas
+- Uses `.describe()` and `.hist()` for statistical summaries and visualizations
+
+### Model Training
+
+- Applies OneHotEncoder to categorical features
+- Trains a RandomForestClassifier with scikit-learn
+- Saves the model using `pickle` for use in real-time predictions
+
+### Real-Time Streaming Simulation
+
+- Testing dataset is streamed as real-time data using Kafka
+- Consumer picks the messages and performs live predictions using the trained model
+
+## Datasets Used
+
+- **Testing Dataset (for streaming)**:  
+  [UNSW-NB15 Testing Set – Kaggle](https://www.kaggle.com/datasets/marvellouschitenga/unsw-nb15-testing-set-parquet-4-54-mb)
+
+- **Training Dataset (despite “testing” in the link)**:  
+  [NADT Training Dataset – Kaggle](https://www.kaggle.com/datasets/marvellouschitenga/nadttesting)
+
+## Tools and Libraries
+
+- PySpark – Distributed data processing and cleaning
+- pandas – Data manipulation
+- matplotlib & seaborn – Data visualization
+- scikit-learn – Machine learning (RandomForestClassifier)
+- Apache Kafka – Real-time data streaming
+- Python – Core programming
 
 
- install pyspark
- install pandas
- install scikit-learn
- install matplotlib seaborn
- the Dataset
+## Full Project Documentation
 
-This project uses the UNSW-NB15 dataset, which can be downloaded from Kaggle. The dataset contains labelled network traffic with attack categories and normal behavior. It was split into training and testing data.  The dataset is provided in .parquet format.
-
-How to Run the Project:
-
-Data Cleaning:
-
-Load the dataset using the DataCleaning class. This class will handle missing values, outliers, and duplicates.
-data_cleaning = DataCleaning('path_to_dataset.parquet')
-data_cleaning.handle_missing_values()
-data_cleaning.handle_duplicates()
-data_cleaning.handle_outliers()
-data_cleaning.encode_categorical_values()
-cleaned_df = data_cleaning.return_cleaned_data()
-
-Data Preprocessing:
-
-Visualize the cleaned dataset using the DataPreprocessing class.
-data_preprocessing = DataPreprocessing(cleaned_df)
-data_preprocessing.visualize_data()
-
-Model Training:
-
-Use the TrainModel class to apply one-hot encoding and train a RandomForestClassifier on the data.
-train_model = TrainModel(cleaned_df)
-train_model.one_hot_encoding()
-train_model.train_model()
-
-Save Cleaned Dataset:
-
-The cleaned dataset can be saved as a CSV file for further analysis or re-use.
-cleaned_df.coalesce(1).write.csv("cleaned_dataset.csv", header=True)
-
-•	Additional Algorithms:
-
-Explore other machine learning algorithms, such as neural networks or gradient boosting, to improve classification accuracy.
+For a deep technical breakdown including architecture diagrams, setup steps, and debugging notes, refer to:  
+**`Network Anomaly Detection Tool__Project Documentation_.pdf`** in this repository.
 
 Conclusion
 
